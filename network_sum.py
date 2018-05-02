@@ -7,6 +7,7 @@ from collections import Counter
 
 url = 'https://raw.githubusercontent.com/zapret-info/z-i/master/dump.csv'
 file_name = 'dump.csv'
+output = 'addresses.txt'
 download = False
 last = ''
 MIN_HOSTS_FOR_JOIN = 32
@@ -85,5 +86,9 @@ for k,v in shorten.most_common():
         break
     joined_networks.append(IPNetwork(k + '/24'))
 short_list = cidr_merge(merged_list + joined_networks) if joined_networks else merged_list
+
+with open(output, mode='wt', encoding='utf-8') as myfile:
+    myfile.write('\n'.join(str(ip) for ip in short_list))
+    myfile.close()
 
 print(str(len(short_list)) + " records in summarized list (more than " + str(MIN_HOSTS_FOR_JOIN) + " addresses in /24 network are substituted with /24 network record)")
